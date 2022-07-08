@@ -22,9 +22,14 @@ jobs:
       - name: build prod
         run: ./gradlew app:bundleRelease
         env:
-          SIGNING_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
+          SAUCE_DEMO_STORE_FILE: ${{ secrets.SAUCE_DEMO_STORE_FILE }}
+          SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
+          SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
+          SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
+          TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
