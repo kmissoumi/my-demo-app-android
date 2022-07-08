@@ -1,17 +1,82 @@
-# my-demo-app-android
+## _Sauce Labs_ My Demo App
+#### _`Android`_  Edition
 
-*My Demo App* is a... demo app! 
-It was built by the Sauce Labs team to showcase product capabilities of the Sauce Labs mobile devices cloud, The Sauce Labs mobile beta testing platform, TestFairy, and more products and technologies that will be added to this project soon.
-
-This app is part of a set of demo apps.
-
-[My Demo App - Android](https://github.com/saucelabs/my-demo-app-android)
-
-[My Demo App - iOS](https://github.com/saucelabs/my-demo-app-ios)
-
-[My Demo App - React Native](https://github.com/saucelabs/my-demo-app-rn)
+<br>
+<img align="right" src="assets/logo_7.png">  
 
 
-## Publish
 
-To publish a new version, create a release with a valid semver tag name. A CI workflow will handle setting the app version name/code and upload the APK into the release. 
+| :rocket: [Sign Up for a _free_ trial at Sauce Labs][400] :bangbang: |
+|:----------------------------------------------------------------- |
+| :white_check_mark: Real Device Cloud                              |
+| :white_check_mark: Beta Testing                                   |
+| :page_facing_up: _`TestFairy`_ [Documentation][200]                  |
+| :page_facing_up: _`TestFairy`_ [API Reference][300]                  |
+| :page_facing_up: _`Sauce Labs`_ [Documentation Central][500]                  |
+
+&nbsp;
+
+[400]: https://saucelabs.com/sign-up
+[200]: https://docs.testfairy.com/Getting_Started/Getting_Started.html
+[300]: https://docs.testfairy.com/API/Upload_API.html
+[500]: https://docs.saucelabs.com/
+
+<br>
+
+## Build Local
+
+
+### Install Dependencies
+
+```shell
+brew install --cask android-studio
+```
+
+<br>
+
+### Set Environment Variables
+
+
+Export your TestFairy SDK app token from [TestFairy Settings][100].
+
+```shell
+export TESTFAIRY_TOKEN=""
+
+# android studio
+launchctl setenv TESTFAIRY_TOKEN ${TESTFAIRY_TOKEN}
+```
+
+<br>
+
+Optionally, set the variables below to automate the upload to TestFairy & Sauce Storage for distribution.
+
+```shell
+export TESTFAIRY_UPLOAD="TRUE"
+export TESTFAIRY_API_KEY=""
+export SAUCE_USERNAME=""
+export SAUCE_ACCESS_KEY=""
+
+# android studio
+launchctl setenv TESTFAIRY_UPLOAD ${TESTFAIRY_UPLOAD}
+```
+
+<br>
+
+
+### Generate a Signing Key
+
+```shell
+chmod +x buildKeystore
+./buildKeystore
+```
+
+
+<br>
+
+### Build 
+
+```shell
+./gradlew clean && ./gradlew app:build 
+```
+
+[100]: https://testfairy.saucelabs.com/settings
