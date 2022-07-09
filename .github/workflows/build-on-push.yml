@@ -29,10 +29,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Make gradlew executable
-        run:  pwd
-              tree
-              ls -la
-              ls -la app
+        run: |
+             pwd
+             tree
+             ls -la
+             ls -la app
         
       - name: Compile
         run: ./gradlew app:build
