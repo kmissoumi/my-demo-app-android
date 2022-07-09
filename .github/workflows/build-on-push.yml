@@ -28,10 +28,10 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Make gradlew executable
+      - name: Get Path Details
         run: |
              pwd
-             cd ../../../../
+             cd ../../../
              pwd
              tree -a
         
