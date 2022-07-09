@@ -15,10 +15,21 @@ android {
             v2SigningEnabled true
         }
         local {
-            storeFile file(SAUCE_DEMO_STORE_FILE)
-            storePassword SAUCE_DEMO_STORE_PASSWORD
-            keyPassword SAUCE_DEMO_KEY_PASSWORD
-            keyAlias SAUCE_DEMO_KEY_ALIAS
+
+            // for CI signing process
+            def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            def allFilesFromDir = new File(tmpFilePath).listFiles()
+
+            if (allFilesFromDir != null) {
+                def keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo("keystore/grogu.keystore")
+            }
+            //
+
+            storeFile file(System.getenv("SAUCE_DEMO_STORE_FILE"))
+            storePassword System.getenv("SAUCE_DEMO_STORE_PASSWORD")
+            keyPassword System.getenv("SAUCE_DEMO_KEY_PASSWORD")
+            keyAlias System.getenv("SAUCE_DEMO_KEY_ALIAS")
             v1SigningEnabled true
             v2SigningEnabled true
         }
@@ -29,7 +40,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1 // CI automatically replaces this
-        versionName "1.0.0" // CI automatically replaces this
+        versionName "1.7.2" // CI automatically replaces this
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

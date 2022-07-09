@@ -14,6 +14,7 @@ releaseNotes=$(git --no-pager log -4 --pretty='format:%s')
 # get the version from the output-metadata JSON file
 versionName=$(jq --raw-output '.elements[].versionName' ${buildPath}/${metaData})
 
+printf "\nUploading to TestFairy..."
 # upload to TestFairy & Sauce Storage (HTTP 500 Messages w/ Sauce Storage)
 r=$(curl https://app4.testfairy.com/api/upload \
         --silent --write-out "\n%{http_code}" \
@@ -26,24 +27,25 @@ r=$(curl https://app4.testfairy.com/api/upload \
         --form upload_to_saucelabs='no')
 
 
-httpStatus="${r##*$'\n'}"
-r="${r%????}"
+testFairyUploadHttpStatus="${r##*$'\n'}"
+testFairyUploadR="${r%????}"
+
+[[ ${testFairyUploadHttpStatus} == "200" ]] && printf "%s\n" "Upload complete."
+
 
 # check the response status & open a bowser on success
-s=$(jq --raw-output '.status' <<< ${r})
-landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${r})
+s=$(jq --raw-output '.status' <<< ${testFairyUploadR})
+landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${testFairyUploadR})
 
+[[ ${testFairyUploadHttpStatus} != "200" ]] \
+    && printf "%s %s\n" "Warning: Upload Status Code:" ${testFairyUploadHttpStatus} \
+    && exit 3
 
-
-[[ ${httpStatus} != "200" ]] \
-    && printf "%s %s\n" "Warning: Upload Status Code:" ${httpStatus} \
-
-# exit ${httpStatus}
 # avoid duplicate uploads
-printf "\nUploading to Sauce Storage\n"
+printf "Uploading to Sauce Storage..."
 # check for environment variable if parameter is not provided
 appFile="${buildPath}/${buildName}"
-[[ ! -f ${appFile} ]] && printf "Provide the fully qualified path to an app as the 1st parameter.\n" && exit 2
+[[ ! -f ${appFile} ]] && printf "\nApp Not Found!. Provide the fully qualified path to an app as the 1st parameter.\n" && exit 2
 [[ -z ${2} ]] && appName=${appFile##*/} || appName=${2}
 
 appCheckSum=$(shasum -a 256 ${appFile} |cut -c 1-65)
@@ -58,38 +60,46 @@ userAuth="${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}"
 
 # call the storage api
 # ask jq to clean up mickey mouse response
-r=$(curl --silent --user ${userAuth} \
+storageQueryR=$(curl --silent --user ${userAuth} \
   --request GET "${protoHost}/v1/storage/files?sha256=${appCheckSum}" \
   | jq  '.items[]|del(.metadata.icon)')
 
-mkdir -p ${baseDir}
-printf "%s" ${r} |jq > ${baseDir}/storageQueryResponse.json
 
-[[ -n ${r} ]] && printf 'App found. Skipping upload.\n' && fileId=$(jq --raw-output '.id' <<< ${r}) && printf 'fileId=%s\n' ${fileId} && exit 0
-
-
-printf "Uploading app..."
-r=$(curl --silent --user ${userAuth} \
-  --write-out "\n%{http_code}" \
-  --request POST ${protoHost}/v1/storage/upload \
-  --form payload=@"${appFile}" \
-  --form name="${appName}" \
-  --form description="My Demo App")
-  
-  # |jq '.item|del(.metadata.icon)'
+[[ -n ${storageQueryR} ]] \
+  && printf 'App found! Skipping upload.\n' \
+  && fileId=$(jq --raw-output '.id' <<< ${storageQueryR}) \
+  && skipSauceUpload="TRUE"
 
 
-httpStatus="${r##*$'\n'}"
-r="${r%????}"
+if [ "${skipSauceUpload}" != "TRUE" ]
+  then
+    r=$(curl --silent --user ${userAuth} \
+      --write-out "\n%{http_code}" \
+      --request POST ${protoHost}/v1/storage/upload \
+      --form payload=@"${appFile}" \
+      --form name="${appName}" \
+      --form description="My Demo App")
 
-fileId=$(jq '.id' <<< ${r})
+    storageUploadHttpStatus="${r##*$'\n'}"
+    storageUploadR=$(jq  '.item|del(.metadata.icon)' <<< "${r%????}")
+    fileId=$(jq '.id' <<< ${storageUploadR})
 
-#printf 'task complete.\nstatus=%s\nresponse output path: %s\n' ${httpStatus} ${baseDir}
-printf 'fileId=%s\n' ${fileId}
+    [[ ${storageUploadHttpStatus} == "200" ]] && printf "%s\n" "Upload complete."
+fi
 
-[[ ${httpStatus} = "200" ]] \
-    && printf "%s %s\n" "Upload to TestFairy & Sauce Storage Completed AOK! Landing Page:" ${landingPageURL} \
+
+#[ ${testFairyUploadHttpStatus} = "200" ] && exit 0
+
+[[ ${testFairyUploadHttpStatus} = "200" ]] \
+    && printf "%s\n"        "Upload to TestFairy & Sauce Storage Completed AOK!" \
+    && printf "\n%s %s\n"   "Landing Page:" ${landingPageURL} \
+    && printf "%s\n"        "https://testfairy.saucelabs.com" \
+    && printf "%s\n"        "https://app.saucelabs.com/live/app-testing" \
+    && printf 'fileId=%s\n' ${fileId} \
+    && exit 0
+
+
+[[ ${autoOpen} ]] \
     && open -a 'Google Chrome' https://app.saucelabs.com/live/app-testing \
     && open -a 'Google Chrome' https://testfairy.saucelabs.com \
     && open -a 'Google Chrome' ${landingPageURL} \
-    && exit 0

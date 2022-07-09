@@ -48,17 +48,22 @@ launchctl setenv TESTFAIRY_TOKEN ${TESTFAIRY_TOKEN}
 
 <br>
 
-Optionally, set the variables below to automate the upload to TestFairy & Sauce Storage for distribution.
+Set the environment variables below to automate the upload to TestFairy & Sauce Storage for distribution.
 
 ```shell
 export TESTFAIRY_UPLOAD="TRUE"
+
 export TESTFAIRY_API_KEY=""
 export SAUCE_USERNAME=""
 export SAUCE_ACCESS_KEY=""
 
 # android studio
 launchctl setenv TESTFAIRY_UPLOAD ${TESTFAIRY_UPLOAD}
+
+# default is us-west-1, set for the EU data centre
+# export SAUCE_DC="eu-central-1"
 ```
+
 
 <br>
 
@@ -76,8 +81,8 @@ chmod +x buildKeystore
 ### Build 
 
 ```shell
-source "${HOME}/.quicksauce/${SAUCE_USERNAME}.keystore.env"
-./gradlew clean && ./gradlew app:build 
+chmod +x buildSauce
+./buildSauce clean
 ```
 
 [100]: https://testfairy.saucelabs.com/settings

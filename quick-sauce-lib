@@ -94,7 +94,7 @@ function check_env {
 
 function check_env_sauce {
 
-  log_info "Checking Sauce Labs environment configuration."
+  #log_info "Checking Sauce Labs environment configuration."
 
   envList="SAUCE_USERNAME
       SAUCE_ACCESS_KEY"
@@ -106,7 +106,7 @@ function check_env_sauce {
 
 function check_env_keystore {
 
-  log_info "Checking keystore environment configuration."
+  #log_info "Checking keystore environment configuration."
 
   envList="SAUCE_DEMO_KEY_ALIAS
       SAUCE_DEMO_STORE_FILE
@@ -120,7 +120,7 @@ function check_env_keystore {
 
 function check_env_testfairy {
 
-  log_info "Checking TestFairy environment configuration."
+  #log_info "Checking TestFairy environment configuration."
 
   envList="TESTFAIRY_TOKEN"
      
@@ -140,7 +140,6 @@ function check_bin {
   jq="jq"
   openssl="openssl"
   keytool="java"
-  jojo="jojo"
 
   missing=""
 
