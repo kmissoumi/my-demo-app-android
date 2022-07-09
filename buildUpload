@@ -98,7 +98,7 @@ if [ "${skipSauceUpload}" != "TRUE" ]
     storageUploadR=$(jq  '.item|del(.metadata.icon)' <<< "${r%????}")
     fileId=$(jq '.id' <<< ${storageUploadR})
 
-    [[ ${storageUploadHttpStatus} == "201" ]] && printf "%s\n" "done!"
+    [[ ${storageUploadHttpStatus} == "201" ]] && printf "%s\n" "Done!"
 
     [[ ${storageUploadHttpStatus} != "201" ]] \
       && printf "%s %s\n" "NOTOK! Something wrong. HTTP status:" ${storageUploadHttpStatus} \

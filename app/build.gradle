@@ -14,7 +14,7 @@ android {
             v1SigningEnabled true
             v2SigningEnabled true
         }
-        local {
+        release {
             storeFile file(System.getenv("SAUCE_DEMO_STORE_FILE"))
             storePassword System.getenv("SAUCE_DEMO_STORE_PASSWORD")
             keyPassword System.getenv("SAUCE_DEMO_KEY_PASSWORD")

@@ -22,7 +22,7 @@ jobs:
       - name: build prod
         run: ./gradlew app:bundleRelease
         env:
-          SAUCE_DEMO_STORE_FILE: 'keystore/grogu.keystore'
+          SAUCE_DEMO_STORE_FILE: '/home/runner/work/_temp/keystore/grogu.keystore'
           SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
           SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
           SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
