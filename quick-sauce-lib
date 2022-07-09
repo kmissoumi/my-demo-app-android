@@ -156,12 +156,14 @@ function check_bin {
   binList="curl
     jq
     openssl
-    keytool"
+    keytool
+    gh"
   
   curl="curl"
   jq="jq"
   openssl="openssl"
   keytool="java"
+  gh="gh"
 
   missing=""
 
