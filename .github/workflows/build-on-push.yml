@@ -25,4 +25,13 @@ jobs:
       - name: Compile
         run: |
           ./gradlew app:build
+        env:
+          SAUCE_DEMO_STORE_FILE: grogu.keystore
+          SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
+          SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
+          SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
+          TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
         shell: bash

@@ -42,6 +42,15 @@ jobs:
           ./gradlew app:assembleDebugAndroidTest
           mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/mda-${{ env.CI_TAG }}-${{ github.run_number }}.apk
           mv app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk app/build/outputs/apk/debug/mda-androidTest-${{ env.CI_TAG }}-${{ github.run_number }}.apk
+        env:
+          SAUCE_DEMO_STORE_FILE: grogu.keystore
+          SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
+          SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
+          SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
+          TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
         shell: bash
 
       - name: Upload release artifacts
