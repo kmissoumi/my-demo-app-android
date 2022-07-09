@@ -76,6 +76,7 @@ chmod +x buildKeystore
 ### Build 
 
 ```shell
+source "${HOME}/.quicksauce/${SAUCE_USERNAME}.keystore.env"
 ./gradlew clean && ./gradlew app:build 
 ```
 

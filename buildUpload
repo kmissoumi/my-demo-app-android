@@ -39,12 +39,6 @@ landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${r})
     && printf "%s %s\n" "Warning: Upload Status Code:" ${httpStatus} \
 
 # exit ${httpStatus}
-
-
-
-
-
-
 # avoid duplicate uploads
 printf "\nUploading to Sauce Storage\n"
 # check for environment variable if parameter is not provided
@@ -81,13 +75,14 @@ r=$(curl --silent --user ${userAuth} \
   --form payload=@"${appFile}" \
   --form name="${appName}" \
   --form description="My Demo App")
+  
+  # |jq '.item|del(.metadata.icon)'
 
 
 httpStatus="${r##*$'\n'}"
 r="${r%????}"
 
-#printf "%s" ${r} |jq '.item|del(.metadata.icon)' > ${baseDir}/storageUploadResponse.json
-fileId=$(jq '.id' ${baseDir}/storageUploadResponse.json)
+fileId=$(jq '.id' <<< ${r})
 
 #printf 'task complete.\nstatus=%s\nresponse output path: %s\n' ${httpStatus} ${baseDir}
 printf 'fileId=%s\n' ${fileId}
@@ -96,5 +91,5 @@ printf 'fileId=%s\n' ${fileId}
     && printf "%s %s\n" "Upload to TestFairy & Sauce Storage Completed AOK! Landing Page:" ${landingPageURL} \
     && open -a 'Google Chrome' https://app.saucelabs.com/live/app-testing \
     && open -a 'Google Chrome' https://testfairy.saucelabs.com \
-    && open -a 'Google Chrome' ${landingPageURL}
+    && open -a 'Google Chrome' ${landingPageURL} \
     && exit 0
