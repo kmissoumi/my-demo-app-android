@@ -31,14 +31,14 @@ jobs:
       - name: Get Path Details
         run: |
              pwd
-             cd ../../../
-             pwd
              tree -a
+             ls -la /home/runner/work/_temp/keystore/grogu.keystore'
+
         
       - name: Compile
         run: ./gradlew app:build
         env:
-          SAUCE_DEMO_STORE_FILE: 'keystore/grogu.keystore'
+          SAUCE_DEMO_STORE_FILE: '/home/runner/work/_temp/keystore/grogu.keystore'
           SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
           SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
           SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}

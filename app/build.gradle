@@ -15,17 +15,6 @@ android {
             v2SigningEnabled true
         }
         local {
-
-            // for CI signing process
-            def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-            def allFilesFromDir = new File(tmpFilePath).listFiles()
-
-            if (allFilesFromDir != null) {
-                def keystoreFile = allFilesFromDir.first()
-                keystoreFile.renameTo("keystore/grogu.keystore")
-            }
-            //
-
             storeFile file(System.getenv("SAUCE_DEMO_STORE_FILE"))
             storePassword System.getenv("SAUCE_DEMO_STORE_PASSWORD")
             keyPassword System.getenv("SAUCE_DEMO_KEY_PASSWORD")
