@@ -19,7 +19,29 @@ function log_warn {
 
 
 function log_debug {
-  [[ ${PARTY_DEBUG} ]] && loggy "DEBUG" ${1}
+  [[ ${PARTY_MODE} ]] || return
+  loggy "DEBUG" "${1}"
+}
+
+
+function log_debug_json {
+  [[ ${PARTY_MODE} ]] || return
+  log_json "${1}"
+  #log_debug  "Variable ${1} written debug directory:${debugDir}"
+  
+}
+
+
+function log_json {
+
+  [[ -z ${timeStamp} ]] && timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
+  scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  debugDir="${scriptPath}/.debug/${timeStamp}"
+
+  [[ -d ${debugDir} ]] || mkdir -p ${debugDir}
+  jq <<< ${!1} > ${debugDir}/${1}.json
+  #log_info "Variable ${1} written debug directory:${debugDir}"
+  
 }
 
 
@@ -172,3 +194,6 @@ function load_keystore_env {
   f="${keystoreFile}.env"
   [[ -f "${f}" ]] && source ${f}
 }
+
+
+log_debug "To exit quick-sauce debug unset PARTY_MODE"

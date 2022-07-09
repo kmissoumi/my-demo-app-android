@@ -7,6 +7,23 @@ buildPath="build/outputs/apk/${buildType}"
 [[ -d ${buildPath} ]] || buildPath="app/${buildPath}"
 buildName="app-${buildType}.apk"
 
+timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
+timeEpoch=$(date +%s)
+scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#quickSauceHome=$( echo "${scriptPath%/*}" )
+#baseDir="${quickSauceHome}/data/api/storage/${timeStamp}"
+
+# set default data centre, for EU use eu-central-1 
+[[ -z ${SAUCE_DC} ]] && SAUCE_DC="us-west-1"
+protoHost="https://api.${SAUCE_DC}.saucelabs.com"
+userAuth="${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}"
+
+function load_lib {
+  f="${scriptPath}/quick-sauce-lib"
+  [[ -f "${f}" ]] && source ${f}
+}
+
+load_lib
 
 # last four commit subjects
 releaseNotes=$(git --no-pager log -4 --pretty='format:%s')
@@ -38,8 +55,11 @@ s=$(jq --raw-output '.status' <<< ${testFairyUploadR})
 landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${testFairyUploadR})
 
 [[ ${testFairyUploadHttpStatus} != "200" ]] \
-    && printf "%s %s\n" "Warning: Upload Status Code:" ${testFairyUploadHttpStatus} \
-    && exit 3
+    && printf "%s %s\n" "Something went wrong. Upload Status Code:" ${testFairyUploadHttpStatus} \
+    && log_json testFairyUploadR \
+    && exit 127
+
+log_debug_json testFairyUploadR
 
 # avoid duplicate uploads
 printf "Uploading to Sauce Storage..."
@@ -49,14 +69,6 @@ appFile="${buildPath}/${buildName}"
 [[ -z ${2} ]] && appName=${appFile##*/} || appName=${2}
 
 appCheckSum=$(shasum -a 256 ${appFile} |cut -c 1-65)
-timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
-scriptPath="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-quickSauceHome=$(echo "${scriptPath%/*}")
-baseDir="${quickSauceHome}/data/api/storage/${timeStamp}"
-
-[[ -z ${SAUCE_DC} ]] && SAUCE_DC="us-west-1"
-protoHost="https://api.${SAUCE_DC}.saucelabs.com"
-userAuth="${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}"
 
 # call the storage api
 # ask jq to clean up mickey mouse response
@@ -68,7 +80,9 @@ storageQueryR=$(curl --silent --user ${userAuth} \
 [[ -n ${storageQueryR} ]] \
   && printf 'App found! Skipping upload.\n' \
   && fileId=$(jq --raw-output '.id' <<< ${storageQueryR}) \
-  && skipSauceUpload="TRUE"
+  && skipSauceUpload="TRUE" \
+  && log_debug_json storageQueryR
+
 
 
 if [ "${skipSauceUpload}" != "TRUE" ]
@@ -85,17 +99,24 @@ if [ "${skipSauceUpload}" != "TRUE" ]
     fileId=$(jq '.id' <<< ${storageUploadR})
 
     [[ ${storageUploadHttpStatus} == "200" ]] && printf "%s\n" "Upload complete."
+
+    [[ ${storageUploadHttpStatus} != "200" ]] \
+      && printf "%s %s\n" "Something wrong. Upload Status Code:" ${storageUploadHttpStatus} \
+      && log_json storageUploadR \
+      && exit 127
+
+
+    log_debug_json storageUploadR
 fi
 
 
-#[ ${testFairyUploadHttpStatus} = "200" ] && exit 0
 
-[[ ${testFairyUploadHttpStatus} = "200" ]] \
-    && printf "%s\n"        "Upload to TestFairy & Sauce Storage Completed AOK!" \
-    && printf "\n%s %s\n"   "Landing Page:" ${landingPageURL} \
-    && printf "%s\n"        "https://testfairy.saucelabs.com" \
-    && printf "%s\n"        "https://app.saucelabs.com/live/app-testing" \
-    && printf 'fileId=%s\n' ${fileId} \
+[[ ${testFairyUploadHttpStatus} == "200" ]] \
+    && printf "%s\n"              "Upload to TestFairy & Sauce Storage Completed AOK!" \
+    && printf "\nhttps://%s"      "testfairy.saucelabs.com" \
+    && printf "\nhttps://%s\n\n"  "app.saucelabs.com/live/app-testing" \
+    && printf "%s=%s\n"           "fileId"            ${fileId} \
+    && printf "\n%s\n%s\n"        "App Landing Page"  ${landingPageURL} \
     && exit 0
 
 

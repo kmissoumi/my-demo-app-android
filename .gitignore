@@ -5,6 +5,7 @@
 
 app/src/main/assets/user_data.json
 *.keystore*
+.debug/
 
 # Node artifact files
 node_modules/

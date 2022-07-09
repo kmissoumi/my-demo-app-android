@@ -31,4 +31,4 @@ check_env_keystore
 check_bin
 
 [[ ${1} == "clean" ]] && ./gradlew clean
-./gradlew app:build 
+./gradlew app:build #--warning-mode all
