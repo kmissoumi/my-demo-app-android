@@ -34,4 +34,5 @@ jobs:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
           TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
+          TESTFAIRY_TOKEN: ${{ secrets.TESTFAIRY_TOKEN }}
         shell: bash
