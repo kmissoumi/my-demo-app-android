@@ -47,7 +47,7 @@ r=$(curl https://app4.testfairy.com/api/upload \
 testFairyUploadHttpStatus="${r##*$'\n'}"
 testFairyUploadR="${r%????}"
 
-[[ ${testFairyUploadHttpStatus} == "200" ]] && printf "%s\n" "Upload complete."
+[[ ${testFairyUploadHttpStatus} == "200" ]] && printf "%s\n" "Done!"
 
 
 # check the response status & open a bowser on success
@@ -98,21 +98,20 @@ if [ "${skipSauceUpload}" != "TRUE" ]
     storageUploadR=$(jq  '.item|del(.metadata.icon)' <<< "${r%????}")
     fileId=$(jq '.id' <<< ${storageUploadR})
 
-    [[ ${storageUploadHttpStatus} == "200" ]] && printf "%s\n" "Upload complete."
+    [[ ${storageUploadHttpStatus} == "201" ]] && printf "%s\n" "done!"
 
-    [[ ${storageUploadHttpStatus} != "200" ]] \
-      && printf "%s %s\n" "Something wrong. Upload Status Code:" ${storageUploadHttpStatus} \
+    [[ ${storageUploadHttpStatus} != "201" ]] \
+      && printf "%s %s\n" "NOTOK! Something wrong. HTTP status:" ${storageUploadHttpStatus} \
       && log_json storageUploadR \
       && exit 127
-
-
+    
     log_debug_json storageUploadR
 fi
 
 
 
 [[ ${testFairyUploadHttpStatus} == "200" ]] \
-    && printf "%s\n"              "Upload to TestFairy & Sauce Storage Completed AOK!" \
+    && printf "%s\n"              "TestFairy & Sauce Storage Tasks Finished AOK!" \
     && printf "\nhttps://%s"      "testfairy.saucelabs.com" \
     && printf "\nhttps://%s\n\n"  "app.saucelabs.com/live/app-testing" \
     && printf "%s=%s\n"           "fileId"            ${fileId} \

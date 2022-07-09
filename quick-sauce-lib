@@ -196,4 +196,8 @@ function load_keystore_env {
 }
 
 
+function accept_android_sdk_licenses {
+   yes | ~/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+}
+
 log_debug "To exit quick-sauce debug unset PARTY_MODE"
