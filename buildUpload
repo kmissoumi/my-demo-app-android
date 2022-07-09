@@ -1,6 +1,6 @@
 #!/bin/bash
 
-buildType="local"
+buildType="release"
 metaData="output-metadata.json"
 
 buildPath="build/outputs/apk/${buildType}"
