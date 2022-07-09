@@ -14,7 +14,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'grogu.keystore'
+          fileName: 'keystore/grogu.keystore'
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Setup Java
@@ -28,12 +28,13 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Make gradlew executable
+        run: pwd && ls && env
         
       - name: Compile
-        run: |
-          ./gradlew app:build
+        run: ./gradlew app:build
         env:
-          SAUCE_DEMO_STORE_FILE: grogu.keystore
+          SAUCE_DEMO_STORE_FILE: 'keystore/grogu.keystore'
           SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
           SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
           SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
