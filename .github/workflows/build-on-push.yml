@@ -31,9 +31,9 @@ jobs:
       - name: Make gradlew executable
         run: |
              pwd
-             tree
-             ls -la
-             ls -la app
+             cd ../../../../
+             pwd
+             tree -a
         
       - name: Compile
         run: ./gradlew app:build
