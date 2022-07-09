@@ -17,6 +17,12 @@ jobs:
           fileName: 'keystore/grogu.keystore'
           encodedString: ${{ secrets.KEYSTORE }}
 
+      - name: Get Path Details
+        run: |
+             pwd
+             tree -a
+             ls -la /home/runner/work/_temp/keystore/grogu.keystore
+
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
@@ -25,15 +31,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Get Path Details
+      - name: Set Executable Bits
         run: |
-             pwd
-             tree -a
-             ls -la /home/runner/work/_temp/keystore/grogu.keystore'
-
+             chmod +x ./gradlew buildUpload
         
       - name: Compile
         run: ./gradlew app:build
