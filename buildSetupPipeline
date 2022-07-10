@@ -1,0 +1,94 @@
+#!/bin/bash
+
+timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
+timeEpoch=$(date +%s)
+scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+baseDir=$( echo "${scriptPath%/*}" )
+
+quickSauceDir="${HOME}/.quicksauce"
+quickSauceEnvFile="${quickSauceDir}/quicksauce.env"
+keystoreName="${SAUCE_USERNAME}.keystore"
+keystoreFile="${quickSauceDir}/${keystoreName}"
+
+
+function load_lib {
+  f="${scriptPath}/quick-sauce-lib"
+  [[ -f "${f}" ]] && source ${f}
+}
+
+
+# use GH to automatically build 
+# convert to encrypted base64 string
+#KEYSTORE
+
+# from environment and keystore.env
+#SAUCE_ACCESS_KEY
+#SAUCE_USERNAME
+#SAUCE_DEMO_KEY_ALIAS
+#SAUCE_DEMO_KEY_PASSWORD
+#SAUCE_DEMO_STORE_FILE
+#SAUCE_DEMO_STORE_PASSWORD
+#TESTFAIRY_API_KEY
+#TESTFAIRY_TOKEN
+#TESTFAIRY_UPLOAD
+
+
+
+
+
+
+function cleanUpHelp {
+    printf "\n%sPartial signing configuration was found!\nMaybe cleanup and try again?\n" ${1}
+    printf "mv %s %s\n" "${keystoreFile} ${keystoreFile}.${timeEpoch}" 
+    printf "mv %s %s\n\n" "${keystoreFile}.env ${keystoreFile}.env.${timeEpoch}"
+    exit 127
+}
+
+
+function generateKeyStore {
+    log_info "Generating signing configuration..."   # keep these secret, keep these safe
+    keystoreAlias="darkSaber"
+    keystoreSecret=$(openssl rand -hex 20)
+
+    log_info "Generating signing keystore..."
+    keytool -genkey -v \
+        -dname "cn=Mando, ou=Mudhorn, o=Mandalor, c=OuterRim" \
+        -keyalg RSA -keysize 2048 -validity 10000 \
+        -alias ${keystoreAlias} \
+        -keystore ${keystoreFile} \
+        -keypass ${keystoreSecret} \
+        -storepass ${keystoreSecret}  # different store and key passwords not supported for PKCS12 keystores.
+
+    keytoolRc=$?
+
+    printf "%s\n%s\n%s\n%s\n" \
+        "export SAUCE_DEMO_KEY_ALIAS=${keystoreAlias}" \
+        "export SAUCE_DEMO_STORE_FILE=${keystoreFile}" \
+        "export SAUCE_DEMO_KEY_PASSWORD=${keystoreSecret}" \
+        "export SAUCE_DEMO_STORE_PASSWORD=${keystoreSecret}" \
+        >> ${keystoreFile}.env
+
+     [[ ${keytoolRc} == "0" ]] && exit 0 || exit 127
+}
+
+
+function main {
+
+    [[ -d ${quickSauceDir} ]] || mkdir -p ${quickSauceDir}
+    #[[ -f ${quickSauceEnvFile} ]]  && printHelp="TRUE" || generateGradleProperties
+    #[[ -f ${SRSF} ]] && printHelp="TRUE" || generateKeyStore && rc="0"
+    #[[ ${printHelp} == "TRUE" ]] && cleanUpHelp
+    [[ -f ${keystoreFile}.env ]] && ((keystoreCode++))
+    [[ -f ${keystoreFile} ]] && ((keystoreCode++))
+    [[ -z ${keystoreCode} ]] && generateKeyStore || cleanUpHelp
+  
+
+}
+
+load_lib
+check_env_sauce
+check_env_testfairy
+check_bin
+main
+
+exit 4

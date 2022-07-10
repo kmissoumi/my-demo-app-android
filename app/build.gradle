@@ -29,7 +29,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1 // CI automatically replaces this
-        versionName "1.7.2" // CI automatically replaces this
+        versionName "1.1.0" // CI automatically replaces this
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
