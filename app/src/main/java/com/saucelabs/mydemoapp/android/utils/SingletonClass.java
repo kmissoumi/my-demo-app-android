@@ -6,6 +6,7 @@ import com.saucelabs.mydemoapp.android.model.CheckoutInfo;
 import com.saucelabs.mydemoapp.android.model.CartItemModel;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.testfairy.TestFairy;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class SingletonClass extends Methods {
 
     public Gson gson() {
         if (gson == null)
-            gson = new Gson();
+            gson = new GsonBuilder().setPrettyPrinting().create();
         return gson;
     }
 
