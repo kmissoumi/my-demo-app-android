@@ -1,0 +1,8 @@
+
+task buildUpload(type: Exec) {
+    if (System.getenv('TESTFAIRY_UPLOAD') == "TRUE" && !System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine '../buildUpload'
+    }
+}
+
+build.finalizedBy buildUpload

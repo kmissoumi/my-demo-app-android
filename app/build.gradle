@@ -1,12 +1,28 @@
 apply plugin: 'com.android.application'
+apply from: '../buildPre.gradle'
+apply from: '../buildPost.gradle'
 
 android {
-    signingConfigs {}
 
     compileSdkVersion 31
     buildToolsVersion "30.0.2"
     useLibrary 'org.apache.http.legacy'
     ndkVersion '21.3.6528147'
+
+    signingConfigs {
+        debug {
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        local {
+            storeFile file(SAUCE_DEMO_STORE_FILE)
+            storePassword SAUCE_DEMO_STORE_PASSWORD
+            keyPassword SAUCE_DEMO_KEY_PASSWORD
+            keyAlias SAUCE_DEMO_KEY_ALIAS
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
 
     defaultConfig {
         applicationId "com.saucelabs.mydemoapp.android"
@@ -33,6 +49,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        local {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.local
+        }
     }
 
     compileOptions {
@@ -48,12 +69,6 @@ android {
         checkReleaseBuilds false
     }
 
-    signingConfigs {
-        debug {
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-    }
 }
 
 dependencies {

@@ -1,0 +1,100 @@
+#!/bin/bash
+
+buildType="local"
+metaData="output-metadata.json"
+
+buildPath="build/outputs/apk/${buildType}"
+[[ -d ${buildPath} ]] || buildPath="app/${buildPath}"
+buildName="app-${buildType}.apk"
+
+
+# last four commit subjects
+releaseNotes=$(git --no-pager log -4 --pretty='format:%s')
+
+# get the version from the output-metadata JSON file
+versionName=$(jq --raw-output '.elements[].versionName' ${buildPath}/${metaData})
+
+# upload to TestFairy & Sauce Storage (HTTP 500 Messages w/ Sauce Storage)
+r=$(curl https://app4.testfairy.com/api/upload \
+        --silent --write-out "\n%{http_code}" \
+        --form api_key="${TESTFAIRY_API_KEY}" \
+        --form file=@"${buildPath}/${buildName}" \
+        --form notify='on' \
+        --form auto_update='on' \
+        --form release_notes="${releaseNotes}" \
+        --form tags='peanut, hamper' \
+        --form upload_to_saucelabs='no')
+
+
+httpStatus="${r##*$'\n'}"
+r="${r%????}"
+
+# check the response status & open a bowser on success
+s=$(jq --raw-output '.status' <<< ${r})
+landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${r})
+
+
+
+[[ ${httpStatus} != "200" ]] \
+    && printf "%s %s\n" "Warning: Upload Status Code:" ${httpStatus} \
+
+# exit ${httpStatus}
+
+
+
+
+
+
+# avoid duplicate uploads
+printf "\nUploading to Sauce Storage\n"
+# check for environment variable if parameter is not provided
+appFile="${buildPath}/${buildName}"
+[[ ! -f ${appFile} ]] && printf "Provide the fully qualified path to an app as the 1st parameter.\n" && exit 2
+[[ -z ${2} ]] && appName=${appFile##*/} || appName=${2}
+
+appCheckSum=$(shasum -a 256 ${appFile} |cut -c 1-65)
+timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
+scriptPath="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+quickSauceHome=$(echo "${scriptPath%/*}")
+baseDir="${quickSauceHome}/data/api/storage/${timeStamp}"
+
+[[ -z ${SAUCE_DC} ]] && SAUCE_DC="us-west-1"
+protoHost="https://api.${SAUCE_DC}.saucelabs.com"
+userAuth="${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}"
+
+# call the storage api
+# ask jq to clean up mickey mouse response
+r=$(curl --silent --user ${userAuth} \
+  --request GET "${protoHost}/v1/storage/files?sha256=${appCheckSum}" \
+  | jq  '.items[]|del(.metadata.icon)')
+
+mkdir -p ${baseDir}
+printf "%s" ${r} |jq > ${baseDir}/storageQueryResponse.json
+
+[[ -n ${r} ]] && printf 'App found. Skipping upload.\n' && fileId=$(jq --raw-output '.id' <<< ${r}) && printf 'fileId=%s\n' ${fileId} && exit 0
+
+
+printf "Uploading app..."
+r=$(curl --silent --user ${userAuth} \
+  --write-out "\n%{http_code}" \
+  --request POST ${protoHost}/v1/storage/upload \
+  --form payload=@"${appFile}" \
+  --form name="${appName}" \
+  --form description="My Demo App")
+
+
+httpStatus="${r##*$'\n'}"
+r="${r%????}"
+
+#printf "%s" ${r} |jq '.item|del(.metadata.icon)' > ${baseDir}/storageUploadResponse.json
+fileId=$(jq '.id' ${baseDir}/storageUploadResponse.json)
+
+#printf 'task complete.\nstatus=%s\nresponse output path: %s\n' ${httpStatus} ${baseDir}
+printf 'fileId=%s\n' ${fileId}
+
+[[ ${httpStatus} = "200" ]] \
+    && printf "%s %s\n" "Upload to TestFairy & Sauce Storage Completed AOK! Landing Page:" ${landingPageURL} \
+    && open -a 'Google Chrome' https://app.saucelabs.com/live/app-testing \
+    && open -a 'Google Chrome' https://testfairy.saucelabs.com \
+    && open -a 'Google Chrome' ${landingPageURL}
+    && exit 0

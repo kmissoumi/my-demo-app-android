@@ -1,0 +1,34 @@
+#!/bin/bash
+
+timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
+timeEpoch=$(date +%s)
+scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+baseDir=$( echo "${scriptPath%/*}" )
+
+quickSauceDir="${HOME}/.quicksauce"
+quickSauceEnvFile="${quickSauceDir}/quicksauce.env"
+keystoreName="${SAUCE_USERNAME}.keystore"
+keystoreFile="${quickSauceDir}/${keystoreName}"
+
+
+function load_lib {
+  f="${scriptPath}/quick-sauce-lib"
+  [[ -f "${f}" ]] && source ${f}
+}
+
+function load_keystore {
+  f="${keystoreFile}.env"
+  [[ -f "${f}" ]] && source ${f}
+}
+
+
+load_lib
+load_keystore
+
+check_env_sauce
+check_env_testfairy
+check_env_keystore
+check_bin
+
+[[ ${1} == "clean" ]] && ./gradlew clean # only run clean task if first parameter matches
+./gradlew app:build # --warning-mode all

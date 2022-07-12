@@ -3,9 +3,18 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+app/src/main/assets/user_data.json
+*.keystore*
+
 # Node artifact files
 node_modules/
 dist/
+
+app/build/
+app/debug/
+app/release/
+*.apk
+.java-version
 
 # Compiled Java class files
 *.class

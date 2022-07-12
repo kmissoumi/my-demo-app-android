@@ -1,0 +1,21 @@
+import groovy.json.JsonOutput
+
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(generateTestFairyConfigurationFile) && System.getenv('TESTFAIRY_TOKEN') == null) {
+       throw new GradleException("Missing TestFairy Organization Token! <Set Environment Variable 'TESTFAIRY_TOKEN'>")
+    }
+}
+
+task generateTestFairyConfigurationFile() {
+    def data = new LinkedHashMap()
+    data.appToken = System.getenv("TESTFAIRY_TOKEN")?:"NoTestFairyTokenFound"
+    data.serverEndpoint = "https://testfairy.saucelabs.com/services/"
+
+    def user_data = JsonOutput.toJson(data)
+    def config_file = new File('app/src/main/assets/user_data.json')
+    config_file.getParentFile().mkdirs();
+    config_file.write(JsonOutput.prettyPrint(user_data))
+}
+
+build.dependsOn generateTestFairyConfigurationFile
