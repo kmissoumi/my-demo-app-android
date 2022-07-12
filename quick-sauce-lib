@@ -157,19 +157,24 @@ function check_bin {
     jq
     openssl
     keytool
-    gh"
+    gh
+    saucectl
+    op"
   
+  # binary_name="brew_install_name"
   curl="curl"
   jq="jq"
   openssl="openssl"
   keytool="java"
   gh="gh"
+  saucectl="saucectl"
+  op="1password-cli"
 
   missing=""
 
   for b in ${binList}
   do
-    [[ -z $(command -v ${b}) ]] && [[ ! -z ${!b} ]] && missing+="${!b} "
+    [[ -z $(command -v ${b}) ]] && [[ ! -z ${!b} ]] && missing+="${!b} "     # last space intentionally left
   done
 
  [[ -z $(command -v brew) ]] \
