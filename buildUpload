@@ -3,7 +3,7 @@
 buildType="release"
 metaData="output-metadata.json"
 
-buildPath="build/outputs/apk/${buildType}"
+buildPath="build/outputs/apk/${buildType}"  
 [[ -d ${buildPath} ]] || buildPath="app/${buildPath}"
 buildName="app-${buildType}.apk"
 
@@ -31,28 +31,32 @@ releaseNotes=$(git --no-pager log -4 --pretty='format:%s')
 # get the version from the output-metadata JSON file
 versionName=$(jq --raw-output '.elements[].versionName' ${buildPath}/${metaData})
 
+
 printf "\nUploading to TestFairy..."
 # upload to TestFairy & Sauce Storage (HTTP 500 Messages w/ Sauce Storage)
-r=$(curl https://app4.testfairy.com/api/upload \
+r=$(curl https://api.testfairy.com/api/upload \
         --silent --write-out "\n%{http_code}" \
         --form api_key="${TESTFAIRY_API_KEY}" \
         --form file=@"${buildPath}/${buildName}" \
         --form notify='on' \
         --form auto_update='on' \
         --form release_notes="${releaseNotes}" \
-        --form tags='peanut, hamper' \
-        --form upload_to_saucelabs='no')
+        --form tags='peanut, hamper, demo' \
+        --form upload_to_saucelabs='on')
 
 
 testFairyUploadHttpStatus="${r##*$'\n'}"
 testFairyUploadR="${r%????}"
+testFairyUploadCode=$(jq --raw-output '.code' <<< ${testFairyUploadR})
 
 [[ ${testFairyUploadHttpStatus} == "200" ]] && printf "%s\n" "Done!"
+
 
 
 # check the response status & open a bowser on success
 s=$(jq --raw-output '.status' <<< ${testFairyUploadR})
 landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${testFairyUploadR})
+
 
 [[ ${testFairyUploadHttpStatus} != "200" ]] \
     && printf "%s %s\n" "Something went wrong. Upload Status Code:" ${testFairyUploadHttpStatus} \
@@ -61,6 +65,9 @@ landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${testFairyUploadR})
 
 log_debug_json testFairyUploadR
 
+
+
+exit 0
 # avoid duplicate uploads
 printf "Uploading to Sauce Storage..."
 # check for environment variable if parameter is not provided

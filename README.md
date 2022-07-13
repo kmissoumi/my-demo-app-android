@@ -40,10 +40,10 @@ brew install --cask android-studio
 Export your TestFairy SDK app token from [TestFairy Settings][100].
 
 ```shell
-export TESTFAIRY_TOKEN=""
+export TESTFAIRY_SDK_TOKEN=""
 
 # android studio
-launchctl setenv TESTFAIRY_TOKEN ${TESTFAIRY_TOKEN}
+launchctl setenv TESTFAIRY_SDK_TOKEN ${TESTFAIRY_SDK_TOKEN}
 ```
 
 <br>

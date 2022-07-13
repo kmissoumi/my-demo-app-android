@@ -1,0 +1,202 @@
+#!/bin/bash
+
+
+timeStamp=$(date +"%Y-%m-%d_%H%M%S_%s")
+timeEpoch=$(date +%s)
+scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+baseDir=$( echo "${scriptPath%/*}" )
+
+tagList="beta
+    crash
+    prd
+    stg
+    release
+    dogfood
+    US
+    DE
+    english
+    rc
+    "
+
+buildType="release"
+metaData="output-metadata.json"
+
+buildPath="build/outputs/apk/${buildType}"  
+[[ -d ${buildPath} ]] || buildPath="app/${buildPath}"
+buildName="app-${buildType}.apk"
+
+appFile="${buildPath}/${buildName}"
+appFile="/Users/kareemmissoumi/Downloads/app-debug.apk"
+# last four commit subjects
+releaseNotes=$(git --no-pager log -4 --pretty='format:%s')
+
+# get the version from the output-metadata JSON file
+versionName=$(jq --raw-output '.elements[].versionName' ${buildPath}/${metaData})
+
+
+function load_lib {
+  f="${scriptPath}/quick-sauce-lib"
+  [[ -f "${f}" ]] && source ${f}
+}
+
+
+function set_xbox {
+    appName="My Demo App Xbox"
+    tags="games, xbox"
+    platformName="xbox"
+    folderName="consoles"
+    packageName="com.saucelabs.demoapp.xbox"   
+    appIcon="assets/film.png"
+}
+
+
+function set_playstation {
+    appName="My Demo App Playstation"
+    tags="games, playstation"
+    platformName="playstation"
+    folderName="consoles"
+    packageName="com.saucelabs.demoapp.ps"    
+    appIcon="assets/message.png"
+}
+
+
+function set_switch {
+    appName="My Demo App Switch"
+    appIcon="assets/transport.png"
+    tags="games, switch"
+    platformName="switch"
+    packageName="com.saucelabs.demoapp.switch"
+    folderName="consoles"
+}
+
+
+function set_windows {
+    appName="My Demo App Win"
+    appIcon="assets/transport.png"
+    tags="games, windows"
+    platformName="windows"
+    packageName="com.saucelabs.demoapp.win"
+    folderName="consoles"
+    appVersion=${1}
+}
+
+
+function upload_xbox {
+    set_xbox
+    for appVersion in ${1}
+        do
+        testfairy_upload
+    done
+}
+
+function upload_playstation {
+    set_playstation
+    for appVersion in ${1}
+        do
+        testfairy_upload
+    done
+}
+
+
+function upload_switch {
+    set_switch ${1}
+      for appVersion in ${1}
+        do
+        testfairy_upload
+    done
+}
+
+
+function upload_windows {
+    set_windows ${1}
+      for appVersion in ${1}
+        do
+        testfairy_upload
+    done
+}
+
+
+function testfairy_upload {
+
+
+    
+    printf "\n${appName} ${appVersion}..."
+    r=$(curl https://app4.testfairy.com/api/upload \
+            --silent --write-out "\n%{http_code}" \
+            --form api_key=${TESTFAIRY_API_KEY} \
+            --form file="@${appFile}" \
+            --form app_name="${appName}" \
+            --form app_icon="@${appIcon}" \
+            --form notify='on' \
+            --form platform="${platformName}" \
+            --form package_name="${packageName}" \
+            --form auto_update='on' \
+            --form release_notes="${releaseNotes}" \
+            --form tags="${tags}" \
+            --form app_version="${appVersion}" \
+            --form upload_to_saucelabs='no' \
+            --form folder_name="${folderName}")
+            
+           
+           ##  --next another time
+
+
+    curlRc=$?
+    testFairyUploadHttpStatus="${r##*$'\n'}"
+    testFairyUploadR="${r%????}"
+    #testFairyUploadCode=$(jq --raw-output '.code' <<< ${testFairyUploadR})   # use status to determine of code exists
+    
+    #[[ ${testFairyUploadCode} == "200" ]] || exit 127
+    [[ ${testFairyUploadHttpStatus} == "200" ]] && printf "%s" "Done!"
+
+
+    # check the response status & open a bowser on success
+    s=$(jq --raw-output '.status' <<< ${testFairyUploadR})
+    landingPageURL=$(jq --raw-output '.landing_page_url' <<< ${testFairyUploadR})
+
+    printf "\t %s" ${landingPageURL}
+    log_json_debug testFairyUploadR "${appName} ${appVersion}"
+}
+
+
+load_lib
+printf "\nUploading to TestFairy\n"
+
+upload_xbox "1.1 1.2 1.9"
+upload_playstation "7.4 8.4 12.1"
+upload_switch  "6.1 8.1 19.1"
+upload_windows "17.1 17.8 19.2"
+
+exit 0
+
+
+function unset_upload_parameters {
+    unset appName tags platformName appVersion folderName packageName appIcon platformName
+}
+
+
+function set_console {
+    c="$(echo ${1} | tr '[A-Z]' '[a-z]')"
+    C="$(tr '[:lower:]' '[:upper:]' <<< ${c:0:1})${c:1}"
+    appName="My Demo App ${C}"
+    tags="games, ${c}"
+    platformName="${console}"
+    folderName="consoles"
+    packageName="com.saucelabs.demoapp.${c}"   
+}
+
+
+function tf_builds {
+    return
+    printf "get builds"
+    printf curl -u $username:password https://app.testfairy.com/api/1/projects/45454545/builds/6565656
+    printf R contains appURL
+}
+
+
+function tf_app_download {
+    return
+    curl -u $username:password -L $appUrl --output $myNewFileName
+ curl -u yair.bar-on@saucelabs.com: -L https://app.testfairy.com/api/1/projects/6906816/builds/9877121/download/mda.apk --output myfile
+
+}
