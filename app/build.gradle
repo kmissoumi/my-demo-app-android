@@ -105,6 +105,10 @@ dependencies {
 
     // Backtrace SDK
     implementation 'com.github.backtrace-labs.backtrace-android:backtrace-library:3.7.0'
+    
+    // Spoon
+    androidTestImplementation 'com.squareup.spoon:spoon-client:1.6.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -15,7 +15,11 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import androidx.test.rule.GrantPermissionRule;
+import com.saucelabs.mydemoapp.android.view.activities.SplashActivity;
+
 import com.saucelabs.mydemoapp.android.BaseTest;
+import com.saucelabs.mydemoapp.android.Screenshot;
 import com.saucelabs.mydemoapp.android.ErrorFlow;
 import com.saucelabs.mydemoapp.android.HappyFlow;
 import com.saucelabs.mydemoapp.android.R;
@@ -30,7 +34,13 @@ import org.junit.runner.RunWith;
 public class LoginTest extends BaseTest {
 
     //This ViewAction For Nested ScrollView
-    private final ViewAction scroll = new NestingAwareScrollAction();
+    private static final ViewAction scroll = new NestingAwareScrollAction();
+    
+    @Rule
+    public GrantPermissionRule mRuntimeReadStoragePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+
+    @Rule
+    public GrantPermissionRule mRuntimeWriteStoragePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Rule
     public ActivityScenarioRule<SplashActivity> activityRule = new ActivityScenarioRule<>(SplashActivity.class);
@@ -56,6 +66,7 @@ public class LoginTest extends BaseTest {
         onView(withText("Username is required"))
                 .perform(scroll)
                 .check(matches(isDisplayed()));
+        Screenshot.takeScreenShot("LoginTestErrorFlow_1");
 
         Espresso.pressBack();
         onView(withId(R.id.menuIV)).check(matches(isDisplayed()));
@@ -88,6 +99,7 @@ public class LoginTest extends BaseTest {
         onView(withText("Username is required"))
                 .perform(scroll)
                 .check(matches(isDisplayed()));
+        Screenshot.takeScreenShot("LoginTestErrorFlow_2");
 
         Espresso.pressBack();
         onView(withId(R.id.menuIV)).check(matches(isDisplayed()));
@@ -122,6 +134,7 @@ public class LoginTest extends BaseTest {
         onView(withText("Enter Password"))
                 .perform(scroll)
                 .check(matches(isDisplayed()));
+        Screenshot.takeScreenShot("LoginTestErrorFlow_3");
 
         Espresso.pressBack();
         onView(withId(R.id.menuIV)).check(matches(isDisplayed()));
@@ -147,6 +160,7 @@ public class LoginTest extends BaseTest {
         // enter a name
         onView(withId(R.id.nameET)).perform(typeText(name), closeSoftKeyboard());
         onView(withId(R.id.passwordET)).perform(typeText(pass),closeSoftKeyboard());
+        Screenshot.takeScreenShot("LoginTestHappyFlow_1");
 
         onView(withId(R.id.nameET)).check(matches(withText(name)));
         onView(withId(R.id.passwordET)).check(matches(withText(pass)));
@@ -154,6 +168,7 @@ public class LoginTest extends BaseTest {
         onView(withId(R.id.loginBtn))
                 .perform(scroll)
                 .perform(click());
+        Screenshot.takeScreenShot("LoginTestHappyFlow_2");
 
         Espresso.pressBack();
         onView(withId(R.id.menuIV)).check(matches(isDisplayed()));
