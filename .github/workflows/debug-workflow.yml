@@ -1,0 +1,35 @@
+name: Debug Workflow
+on: [push]
+
+jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Code
+      uses: actions/checkout@v2
+
+    - name: Print Env
+      env:
+        SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+        SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+        SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
+        SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
+        SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
+        TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
+        TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
+        SAUCE_DEMO_STORE_FILE: 'keystore/grogu.keystore'
+      run: |
+        echo ${{secrets.SAUCE_USERNAME}} >> secrets.txt
+        echo ${{secrets.SAUCE_ACCESS_KEY}}  >> secrets.txt
+        echo ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}  >> secrets.txt
+        echo ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}  >> secrets.txt
+        echo ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}  >> secrets.txt
+        echo ${{ secrets.TESTFAIRY_API_KEY }}  >> secrets.txt
+        echo ${{ secrets.TESTFAIRY_UPLOAD }}  >> secrets.txt
+        echo 'keystore/grogu.keystore'  >> secrets.txt
+        env >> env.txt
+
+    - name: Run tmate
+      uses: mxschmitt/action-tmate@v2
