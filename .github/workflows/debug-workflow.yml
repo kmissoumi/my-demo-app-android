@@ -20,7 +20,7 @@ jobs:
         SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
         TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
         TESTFAIRY_UPLOAD: TRUE
-        SAUCE_DEMO_STORE_FILE: '${{ env.home }}/keystore/grogu.keystore'
+        SAUCE_DEMO_STORE_FILE: '${{ env.HOME }}/keystore/grogu.keystore'
       run: |
         echo ${{secrets.SAUCE_USERNAME}} >> secrets.txt
         echo ${{secrets.SAUCE_ACCESS_KEY}}  >> secrets.txt
