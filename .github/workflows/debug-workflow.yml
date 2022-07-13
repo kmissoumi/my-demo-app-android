@@ -34,7 +34,6 @@ jobs:
         env >> env.txt
         pwd
         tree -a
-        ls -la ${{ env.SAUCE_DEMO_STORE_FILE }}
 
     - name: Run tmate
       uses: mxschmitt/action-tmate@v2
