@@ -1,5 +1,6 @@
 name: Debug Workflow
-on: [push]
+
+on: workflow_dispatch
 
 jobs:
   debug:
@@ -18,7 +19,7 @@ jobs:
         SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
         SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
         TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
-        TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
+        TESTFAIRY_UPLOAD: TRUE
         SAUCE_DEMO_STORE_FILE: 'keystore/grogu.keystore'
       run: |
         echo ${{secrets.SAUCE_USERNAME}} >> secrets.txt
@@ -27,9 +28,13 @@ jobs:
         echo ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}  >> secrets.txt
         echo ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}  >> secrets.txt
         echo ${{ secrets.TESTFAIRY_API_KEY }}  >> secrets.txt
-        echo ${{ secrets.TESTFAIRY_UPLOAD }}  >> secrets.txt
-        echo 'keystore/grogu.keystore'  >> secrets.txt
+        echo ${{ env.TESTFAIRY_UPLOAD }}  >> export.txt
+        echo ${{ env.SAUCE_DEMO_STORE_FILE }}  >> export.txt
+        echo 
         env >> env.txt
+        pwd
+        tree -a
+        ls -la ${{ env.SAUCE_DEMO_STORE_FILE }}
 
     - name: Run tmate
       uses: mxschmitt/action-tmate@v2

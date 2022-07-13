@@ -1,6 +1,6 @@
 name: Build
 
-on: workflow_dispatch
+on: [push]
 
 jobs:
   build:
@@ -14,14 +14,14 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'keystore/grogu.keystore'
+          fileName: ${{ env.SAUCE_DEMO_STORE_FILE }}
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Get Path Details
         run: |
              pwd
              tree -a
-             ls -la /home/runner/work/_temp/keystore/grogu.keystore
+             ls -la ${{ env.SAUCE_DEMO_STORE_FILE }}
 
       - name: Setup Java
         uses: actions/setup-java@v1
@@ -45,6 +45,6 @@ jobs:
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
-          TESTFAIRY_UPLOAD: ${{ secrets.TESTFAIRY_UPLOAD }}
           TESTFAIRY_TOKEN: ${{ secrets.TESTFAIRY_TOKEN }}
+          TESTFAIRY_UPLOAD: 'TRUE'
         shell: bash
