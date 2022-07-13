@@ -10,7 +10,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'keystore/grogu.keystore'
+          fileName: ${{ env.SAUCE_DEMO_STORE_FILE }}
           encodedString: ${{ secrets.KEYSTORE }}
       - uses: actions/checkout@v2
       - name: Setup Java
