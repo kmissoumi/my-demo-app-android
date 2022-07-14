@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
+
+        
     - name: Set Environment
       run: |
         printf "SAUCE_DEMO_STORE_FILE=%s/keystore/grogu.keystore" ${RUNNER_TEMP} >> ${GITHUB_ENV}
@@ -35,6 +36,8 @@ jobs:
         SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
         TESTFAIRY_API_KEY: ${{ secrets.TESTFAIRY_API_KEY }}
         TESTFAIRY_UPLOAD: 'TRUE'
+        SAUCE_DEMO_STORE_NAME: 'keystore/grogu.keystore'
+
       run: |
         echo ${{ secrets.SAUCE_USERNAME }} >> secrets.txt
         echo ${{ secrets.SAUCE_ACCESS_KEY }}  >> secrets.txt
@@ -44,6 +47,8 @@ jobs:
         echo ${{ secrets.TESTFAIRY_API_KEY }}  >> secrets.txt
         echo ${{ env.TESTFAIRY_UPLOAD }}  >> export.txt
         echo ${{ env.SAUCE_DEMO_STORE_FILE }} >> export.txt
+        echo ${{ env.SAUCE_DEMO_STORE_NAME }} >> export.txt
+
         echo 
         env >> env.txt
         pwd
