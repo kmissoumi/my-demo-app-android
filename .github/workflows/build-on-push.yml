@@ -17,7 +17,7 @@ jobs:
       - name: Check Env
         run: |
           echo ${{ env.SAUCE_DEMO_STORE_FILE }}
-          ls ${{ env.SAUCE_DEMO_STORE_FILE }}
+          ls ${{ SAUCE_DEMO_STORE_FILE }}
 
       - name: Decode Keystore
         id: decode_keystore
