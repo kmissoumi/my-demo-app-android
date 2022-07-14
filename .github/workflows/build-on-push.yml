@@ -12,8 +12,7 @@ jobs:
 
       - name: Set Environment
         run: |
-          echo "SAUCE_DEMO_STORE_FILE=${GITHUB_WORKSPACE}/${{ env.SAUCE_DEMO_STORE_NAME }}"
-          echo "SAUCE_DEMO_STORE_FILE=${GITHUB_WORKSPACE}/${{ env.SAUCE_DEMO_STORE_NAME }}" >> $GITHUB_ENV
+          echo "SAUCE_DEMO_STORE_FILE=${RUNNER_TEMP}/${{ env.SAUCE_DEMO_STORE_NAME }}" >> ${GITHUB_ENV}
     
       - name: Check Env
         run: |
@@ -23,7 +22,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: ${{ env.SAUCE_DEMO_STORE_FILE }}
+          fileName: ${{ env.SAUCE_DEMO_STORE_NAME }}
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Get Path Details
@@ -46,7 +45,7 @@ jobs:
       - name: Compile
         run: ./gradlew app:build
         env:
-          SAUCE_DEMO_STORE_NAME: 'keystore/grogu.keystore'
+          SAUCE_DEMO_STORE_NAME: 'grogu.keystore'
           SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
           SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
           SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
