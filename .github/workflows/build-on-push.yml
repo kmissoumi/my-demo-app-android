@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Set env
-          run: echo "SAUCE_DEMO_STORE_FILE=${GITHUB_WORKSPACE}/${{ env.SAUCE_DEMO_STORE_NAME}}" >> $GITHUB_ENV
+      - name: Set Environment
+        run: echo "SAUCE_DEMO_STORE_FILE=${GITHUB_WORKSPACE}/${{ env.SAUCE_DEMO_STORE_NAME }}" >> $GITHUB_ENV
 
       - name: Decode Keystore
         id: decode_keystore
