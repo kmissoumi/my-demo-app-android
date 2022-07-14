@@ -163,6 +163,12 @@ function testfairy_upload {
 }
 
 
+
+more env
+-F symbols_file=@sample_mapping.txt \
+    -F groups='friends,beta' \
+
+    
 load_lib
 printf "\nUploading to TestFairy\n"
 
