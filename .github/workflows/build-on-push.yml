@@ -12,11 +12,12 @@ jobs:
 
       - name: Set Environment
         run: |
-          echo "SAUCE_DEMO_STORE_FILE=${RUNNER_TEMP}/grogu.keystore" >> ${GITHUB_ENV}
+          echo "SAUCE_DEMO_STORE_FILE=${RUNNER_TEMP}/keystore/grogu.keystore" >> ${GITHUB_ENV}
     
       - name: Check Env
         run: |
           echo ${{ env.SAUCE_DEMO_STORE_FILE }}
+          ls ${{ env.SAUCE_DEMO_STORE_FILE }}
 
       - name: Decode Keystore
         id: decode_keystore
@@ -45,7 +46,7 @@ jobs:
       - name: Compile
         run: ./gradlew app:build
         env:
-          SAUCE_DEMO_STORE_NAME: 'grogu.keystore'
+          SAUCE_DEMO_STORE_NAME: 'keystore/grogu.keystore'
           SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
           SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
           SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
