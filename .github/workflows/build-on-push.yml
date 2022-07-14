@@ -15,8 +15,9 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'keystore/grogu.keystore'
+          fileName: 'grogu.keystore'
           encodedString: ${{ secrets.KEYSTORE }}
+          fileDir: '/home/runner/work/my-demo-app-android/my-demo-app-android/app/'
 
       - name: Get Path Details
         run: |
@@ -38,7 +39,7 @@ jobs:
       - name: Compile
         run: ./gradlew app:build
         env:
-          SAUCE_DEMO_STORE_FILE: 'keystore/grogu.keystore'
+          SAUCE_DEMO_STORE_FILE: 'grogu.keystore'
           SAUCE_DEMO_KEY_ALIAS: ${{ secrets.SAUCE_DEMO_KEY_ALIAS }}
           SAUCE_DEMO_KEY_PASSWORD: ${{ secrets.SAUCE_DEMO_KEY_PASSWORD }}
           SAUCE_DEMO_STORE_PASSWORD: ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}
