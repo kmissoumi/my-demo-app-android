@@ -25,6 +25,12 @@ buildPath="build/outputs/apk/${buildType}"
 [[ -d ${buildPath} ]] || buildPath="app/${buildPath}"
 buildName="app-${buildType}.apk"
 
+testFairyDomain="testfairy.com"
+testFairyEndpoint="app4"  # api
+protoHost="https://${testFairyEndpoint}.${testFairyDomain}"
+
+
+
 appFile="${buildPath}/${buildName}"
 appFile="/Users/kareemmissoumi/Downloads/app-debug.apk"
 # last four commit subjects
@@ -47,6 +53,7 @@ function set_xbox {
     folderName="consoles"
     packageName="com.saucelabs.demoapp.xbox"   
     appIcon="assets/film.png"
+    uploadSauceStorage="no"
 }
 
 
@@ -57,6 +64,7 @@ function set_playstation {
     folderName="consoles"
     packageName="com.saucelabs.demoapp.ps"    
     appIcon="assets/message.png"
+    uploadSauceStorage="no"
 }
 
 
@@ -67,6 +75,7 @@ function set_switch {
     platformName="switch"
     packageName="com.saucelabs.demoapp.switch"
     folderName="consoles"
+    uploadSauceStorage="no"
 }
 
 
@@ -77,39 +86,36 @@ function set_windows {
     platformName="windows"
     packageName="com.saucelabs.demoapp.win"
     folderName="consoles"
-    appVersion=${1}
+    uploadSauceStorage="no"
 }
 
 
 function upload_xbox {
     set_xbox
-    for appVersion in ${1}
-        do
-        testfairy_upload
-    done
+    testfairy_upload_loop "${1}"
 }
+
 
 function upload_playstation {
     set_playstation
-    for appVersion in ${1}
-        do
-        testfairy_upload
-    done
+    testfairy_upload_loop "${1}"
 }
 
 
 function upload_switch {
-    set_switch ${1}
-      for appVersion in ${1}
-        do
-        testfairy_upload
-    done
+    set_switch
+   testfairy_upload_loop "${1}"
 }
 
 
 function upload_windows {
-    set_windows ${1}
-      for appVersion in ${1}
+    set_windows
+    testfairy_upload_loop "${1}"
+}
+
+
+function testfairy_upload_loop {
+    for appVersion in ${1}
         do
         testfairy_upload
     done
@@ -118,10 +124,8 @@ function upload_windows {
 
 function testfairy_upload {
 
-
-    
     printf "\n${appName} ${appVersion}..."
-    r=$(curl https://app4.testfairy.com/api/upload \
+    r=$(curl ${protoHost}/api/upload \
             --silent --write-out "\n%{http_code}" \
             --form api_key=${TESTFAIRY_API_KEY} \
             --form file="@${appFile}" \
@@ -134,7 +138,7 @@ function testfairy_upload {
             --form release_notes="${releaseNotes}" \
             --form tags="${tags}" \
             --form app_version="${appVersion}" \
-            --form upload_to_saucelabs='no' \
+            --form upload_to_saucelabs="${uploadSauceStorage}" \
             --form folder_name="${folderName}")
             
            

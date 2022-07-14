@@ -1,0 +1,20 @@
+[ 
+    {
+        "platform": "xbox",
+        "appName": "My Demo App Xbox",
+        "tags": "games, xbox",
+        "folderName": "consoles",
+        "packageName": "com.saucela,bs.demoapp.xbox",
+        "appIcon": "assets/film.png",
+        "uploadSauceStorage": "no"
+    },
+    {
+        "platform": "xbox",
+        "appName": "My Demo App Xbox",
+        "tags": "games, xbox",
+        "folderName": "consoles",
+        "packageName": "com.saucela,bs.demoapp.xbox",
+        "appIcon": "assets/film.png",
+        "uploadSauceStorage": "no"
+    }
+]
