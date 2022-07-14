@@ -12,7 +12,7 @@ jobs:
 
       - name: Set Environment
         run: |
-          echo "SAUCE_DEMO_STORE_FILE=${RUNNER_TEMP}/${{ env.SAUCE_DEMO_STORE_NAME }}" >> ${GITHUB_ENV}
+          echo "SAUCE_DEMO_STORE_FILE=${RUNNER_TEMP}/grogu.keystore" >> ${GITHUB_ENV}
     
       - name: Check Env
         run: |
@@ -22,7 +22,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: ${{ env.SAUCE_DEMO_STORE_NAME }}
+          fileName: ${{ env.SAUCE_DEMO_STORE_FILE }}
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Get Path Details
