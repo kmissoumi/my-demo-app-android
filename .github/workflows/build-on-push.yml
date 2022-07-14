@@ -12,12 +12,13 @@ jobs:
 
       - name: Set Environment
         run: |
-          echo "SAUCE_DEMO_STORE_FILE=${RUNNER_TEMP}/keystore/grogu.keystore" >> ${GITHUB_ENV}
+          printf "SAUCE_DEMO_STORE_FILE=%s/keystore/grogu.keystore" ${RUNNER_TEMP} >> ${GITHUB_ENV}
     
       - name: Check Env
         run: |
+          env
           echo ${{ env.SAUCE_DEMO_STORE_FILE }}
-          ls ${{ SAUCE_DEMO_STORE_FILE }}
+          ls ${{ env.SAUCE_DEMO_STORE_FILE }}
 
       - name: Decode Keystore
         id: decode_keystore
