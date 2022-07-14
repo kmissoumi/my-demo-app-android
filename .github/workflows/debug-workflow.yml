@@ -43,7 +43,6 @@ jobs:
         echo ${{ secrets.SAUCE_DEMO_STORE_PASSWORD }}  >> secrets.txt
         echo ${{ secrets.TESTFAIRY_API_KEY }}  >> secrets.txt
         echo ${{ env.TESTFAIRY_UPLOAD }}  >> export.txt
-        echo ${{ env.SAUCE_DEMO_STORE_FILE }}  >> export.txt
         echo ${{ env.SAUCE_DEMO_STORE_FILE }} >> export.txt
         echo 
         env >> env.txt
