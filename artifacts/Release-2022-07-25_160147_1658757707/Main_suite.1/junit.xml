@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testsuite name="Main suite" tests="7" failures="4" skipped="0" timestamp="2022-07-25T14:03:15.893Z" time="40.236" package="com.saucelabs.mydemoapp.android">
+    <testcase name="dashboardProductTest" classname="com.saucelabs.mydemoapp.android.view.activities.DashboardToCheckout" time="17.618"/>
+    <testcase name="succesfulLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="2.764">
+        <failure>java.lang.RuntimeException: Unable to capture screenshot.&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:89)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:62)&#13;
+at com.saucelabs.mydemoapp.android.Screenshot.takeScreenShot(Screenshot.java:30)&#13;
+at com.saucelabs.mydemoapp.android.view.activities.LoginTest.succesfulLoginTest(LoginTest.java:161)&#13;
+... 31 trimmed&#13;
+Caused by: java.lang.IllegalAccessException: Unable to create output dir: /storage/emulated/0/app_spoon-screenshots&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:264)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.filesDirectory(Spoon.java:226)&#13;
+at com.squareup.spoon.Spoon.obtainScreenshotDirectory(Spoon.java:142)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:80)&#13;
+... 35 more&#13;
+</failure>
+    </testcase>
+    <testcase name="noUsernameLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="2.212">
+        <failure>java.lang.RuntimeException: Unable to capture screenshot.&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:89)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:62)&#13;
+at com.saucelabs.mydemoapp.android.Screenshot.takeScreenShot(Screenshot.java:30)&#13;
+at com.saucelabs.mydemoapp.android.view.activities.LoginTest.noUsernameLoginTest(LoginTest.java:100)&#13;
+... 31 trimmed&#13;
+Caused by: java.lang.IllegalAccessException: Unable to create output dir: /storage/emulated/0/app_spoon-screenshots&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:264)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.filesDirectory(Spoon.java:226)&#13;
+at com.squareup.spoon.Spoon.obtainScreenshotDirectory(Spoon.java:142)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:80)&#13;
+... 35 more&#13;
+</failure>
+    </testcase>
+    <testcase name="noPasswordLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="2.426">
+        <failure>java.lang.RuntimeException: Unable to capture screenshot.&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:89)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:62)&#13;
+at com.saucelabs.mydemoapp.android.Screenshot.takeScreenShot(Screenshot.java:30)&#13;
+at com.saucelabs.mydemoapp.android.view.activities.LoginTest.noPasswordLoginTest(LoginTest.java:135)&#13;
+... 31 trimmed&#13;
+Caused by: java.lang.IllegalAccessException: Unable to create output dir: /storage/emulated/0/app_spoon-screenshots&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:264)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.filesDirectory(Spoon.java:226)&#13;
+at com.squareup.spoon.Spoon.obtainScreenshotDirectory(Spoon.java:142)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:80)&#13;
+... 35 more&#13;
+</failure>
+    </testcase>
+    <testcase name="noCredentialLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="1.384">
+        <failure>java.lang.RuntimeException: Unable to capture screenshot.&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:89)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:62)&#13;
+at com.saucelabs.mydemoapp.android.Screenshot.takeScreenShot(Screenshot.java:30)&#13;
+at com.saucelabs.mydemoapp.android.view.activities.LoginTest.noCredentialLoginTest(LoginTest.java:67)&#13;
+... 31 trimmed&#13;
+Caused by: java.lang.IllegalAccessException: Unable to create output dir: /storage/emulated/0/app_spoon-screenshots&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:264)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.createDir(Spoon.java:261)&#13;
+at com.squareup.spoon.Spoon.filesDirectory(Spoon.java:226)&#13;
+at com.squareup.spoon.Spoon.obtainScreenshotDirectory(Spoon.java:142)&#13;
+at com.squareup.spoon.Spoon.screenshot(Spoon.java:80)&#13;
+... 35 more&#13;
+</failure>
+    </testcase>
+    <testcase name="webViewTest" classname="com.saucelabs.mydemoapp.android.view.activities.WebViewTest" time="3.68"/>
+    <testcase name="withoutUrlTest" classname="com.saucelabs.mydemoapp.android.view.activities.WebViewTest" time="1.481"/>
+</testsuite>

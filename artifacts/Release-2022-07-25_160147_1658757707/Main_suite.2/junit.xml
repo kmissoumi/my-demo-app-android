@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testsuite name="Main suite" tests="7" failures="0" skipped="0" timestamp="2022-07-25T14:03:28.604Z" time="80.517" package="com.saucelabs.mydemoapp.android">
+    <testcase name="dashboardProductTest" classname="com.saucelabs.mydemoapp.android.view.activities.DashboardToCheckout" time="32.963"/>
+    <testcase name="succesfulLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="7.908"/>
+    <testcase name="noUsernameLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="4.892"/>
+    <testcase name="noPasswordLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="4.896"/>
+    <testcase name="noCredentialLoginTest" classname="com.saucelabs.mydemoapp.android.view.activities.LoginTest" time="3.411"/>
+    <testcase name="webViewTest" classname="com.saucelabs.mydemoapp.android.view.activities.WebViewTest" time="6.647"/>
+    <testcase name="withoutUrlTest" classname="com.saucelabs.mydemoapp.android.view.activities.WebViewTest" time="2.684"/>
+</testsuite>
