@@ -31,6 +31,7 @@ Android 11 | ❌  | failed | [e5e6d98e554d4d859032283f89f34ab1][220]
 
 
 [300]: ./artifacts/Release-2022-07-25_160147_1658757707
+[310]: ./artifacts/Release-2022-07-25_160147_1658757707/job_info_edcedfba08f641b693da18447844a43e.json
 
 `
 Caused by: java.lang.IllegalAccessException: Unable to create output dir: /storage/emulated/0/app_spoon-screenshots
@@ -41,7 +42,7 @@ Caused by: java.lang.IllegalAccessException: Unable to create output dir: /stora
 
 ### API Validation
 
-Logs and output are in the _artifacts_[300] directory.
+Logs and output are in the _[artifacts][300]_ directory. Full response response [here][310].
 ```json
   "screenshots": [
     {
@@ -66,7 +67,5 @@ Logs and output are in the _artifacts_[300] directory.
     }
   ],
   ```
-
-```
 
 
