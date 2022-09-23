@@ -45,17 +45,15 @@ public class MyApplication extends android.app.Application {
 	}
 
 	private void initializeBacktrace() {
-		/*
 		BacktraceCredentials credentials = new BacktraceCredentials(
-			"<url>",
-			"<token>"
+			"https://cd03.sp.backtrace.io:6098",
+			"e0e3200c0a9c6096577df26c940d1203b7426a353c1a1cd1e23c5e0f092abb1f"
 		);
 
 		BacktraceClient backtraceClient = new BacktraceClient(getApplicationContext(), credentials);
 		BacktraceExceptionHandler.enable(backtraceClient);
 
 		MyApplication.backtraceClient = backtraceClient;
-		*/
 	}
 
 	private void initializeTestFairy() {
